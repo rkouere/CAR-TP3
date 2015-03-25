@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
  *
  * @author echallier
  */
-public class Main {
+public class MainQ2 {
     public static void main(String[] args) throws RemoteException {
         
         byte[] data = "bonjour".getBytes();
