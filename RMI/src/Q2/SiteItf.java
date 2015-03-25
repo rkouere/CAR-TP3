@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package rmi;
+package Q2;
 
+import rmi.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -13,8 +14,9 @@ import java.rmi.RemoteException;
  *
  * @author echallier
  */
-public interface SiteItf extends Remote, ObserverInt {
+public interface SiteItf extends Remote {
     public void diffuserMessage(byte[] data) throws RemoteException;
     public void recevoirMessage(byte[] data) throws RemoteException;
+    public void addFils(SiteImpl fils) throws RemoteException;
     public void addPere(SiteImpl fils) throws RemoteException;
 }

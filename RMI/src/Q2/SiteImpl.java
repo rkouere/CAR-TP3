@@ -4,10 +4,10 @@
  * and open the template in the editor.
  */
 
-package rmi;
+package Q2;
 
+import rmi.*;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author echallier
  */
-public class SiteImpl extends UnicastRemoteObject implements SiteItf {
+public class SiteImpl implements SiteItf {
 
 
     private SiteImpl pere = null;
@@ -24,21 +24,16 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
     private int id;
 
 
-    public SiteImpl() throws RemoteException {
-    }
-    
-    public void init(int id) {
-        this.id = id;        
+    public SiteImpl(int id) {
+        this.id = id;
     }
     
     
     @Override
     public void diffuserMessage(byte[] data) throws RemoteException {
-        synchronized(this.fils) {
-            for(SiteImpl site:fils){
-                System.out.println("[noeud " + this.id + "] Sending data to " + site.id);
-                site.recevoirMessage(data);
-            }
+        for(SiteImpl site:fils){
+            System.out.println("[noeud " + this.id + "] Sending data to " + site.id);
+            site.recevoirMessage(data);
         }
     }
 
@@ -59,25 +54,14 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
     }
 
     @Override
-    public void attach(SiteImpl fils) throws RemoteException {
-        synchronized(this.fils) {
-            this.fils.add(fils);
-        }
-    }
-    
-    @Override
-    public void detach(SiteImpl fils) throws RemoteException {
-        synchronized(this.fils) {
-            this.fils.remove(fils);
-        }
+    public void addFils(SiteImpl fils) throws RemoteException {
+        this.fils.add(fils);
     }
 
     @Override
     public void addPere(SiteImpl pere) throws RemoteException {
         this.pere = pere;
     }
-
- 
     
     
 }

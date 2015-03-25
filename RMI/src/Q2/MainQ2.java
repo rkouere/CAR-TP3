@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package rmi;
+package Q2;
 
+import rmi.*;
 import java.rmi.RemoteException;
 
 /**
