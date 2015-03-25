@@ -15,5 +15,7 @@ import java.rmi.RemoteException;
  */
 public interface SiteItf extends Remote {
     public void diffuserMessage(byte[] data) throws RemoteException;
-    public boolean recevoirMessage(byte[] data) throws RemoteException;
+    public void recevoirMessage(byte[] data) throws RemoteException;
+    public void addFils(SiteImpl fils) throws RemoteException;
+    public void addPere(SiteImpl pere) throws RemoteException;
 }
