@@ -17,7 +17,6 @@ import java.util.List;
  */
 public class SiteImpl implements SiteItf {
 
-
     private SiteImpl pere = null;
     private List<SiteImpl> fils = new ArrayList<SiteImpl>();
     private byte[] data = null;
