@@ -17,11 +17,11 @@ public class Client {
     public static void main(String[] args)  throws Exception {
         byte[] data = "bonjour".getBytes();
 
-         // Assign security manager
-        if (System.getSecurityManager() == null)
-        {
-            System.setSecurityManager   (new RMISecurityManager());
-        }
+//         // Assign security manager
+//        if (System.getSecurityManager() == null)
+//        {
+//            System.setSecurityManager   (new RMISecurityManager());
+//        }
 
         // Call registry for the first node
         SiteImpl service = (SiteImpl) Naming.lookup("rmi://" + InetAddress.getLocalHost().getHostName() + "/node1");

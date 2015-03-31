@@ -10,6 +10,7 @@ import Q2.*;
 import rmi.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 
 /**
  *
@@ -18,4 +19,6 @@ import java.rmi.RemoteException;
 public interface SiteItf extends Remote {
     public void diffuserMessage(byte[] data) throws RemoteException;
     public void recevoirMessage(byte[] data) throws RemoteException;
+    public void addFils(SiteImpl fils) throws RemoteException;
+    public List<SiteImpl> getFils() throws RemoteException;
 }
