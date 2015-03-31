@@ -17,7 +17,7 @@ import java.rmi.registry.Registry;
  */
 public class Server {
        public static void main(String[] args){
-        SiteImpl obj1, obj2, obj3, obj4, obj5, obj6;
+        SiteItf obj1, obj2, obj3, obj4, obj5, obj6;
         try {
             /* bin chaque objets au server */
             obj1 = new SiteImpl();
@@ -40,16 +40,16 @@ public class Server {
 
             
             /* exporting the object */
-            Naming.rebind("rmi://localhost:6000/node1", obj1);
-//            registre.rebind("node2", obj2);
+            registre.rebind("rmi://localhost:6000/node1", obj1);
+            registre.rebind("rmi://localhost:6000/node2", obj2);
 //            registre.rebind("node3", obj3);
 //            registre.rebind("node4", obj4);
 //            registre.rebind("node5", obj5);
 //            registre.rebind("node6", obj6);
             
             /* we get the reference of the stub */
-            obj1 = (SiteImpl) registre.lookup("node1");
-//            obj2 = (SiteImpl) registre.lookup("node2");
+            obj1 = (SiteItf) registre.lookup("rmi://localhost:6000/node1");
+            obj2 = (SiteItf) registre.lookup("rmi://localhost:6000/node2");
 //            obj3 = (SiteImpl) registre.lookup("node3");
 //            obj4 = (SiteImpl) registre.lookup("node4");
 //            obj5 = (SiteImpl) registre.lookup("node5");
@@ -57,13 +57,13 @@ public class Server {
 
                        
             /* we add the sons */
-            obj1.addFils(obj2);
-            obj1.addFils(obj5);
-
-            obj2.addFils(obj3);
-            obj2.addFils(obj4);
-
-            obj5.addFils(obj6);
+           obj1.addFils(obj2);
+//            obj1.addFils(obj5);
+//
+//            obj2.addFils(obj3);
+//            obj2.addFils(obj4);
+//
+//            obj5.addFils(obj6);
             
 
             

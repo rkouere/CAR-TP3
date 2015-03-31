@@ -19,6 +19,8 @@ import java.util.List;
 public interface SiteItf extends Remote {
     public void diffuserMessage(byte[] data) throws RemoteException;
     public void recevoirMessage(byte[] data) throws RemoteException;
-    public void addFils(SiteImpl fils) throws RemoteException;
-    public List<SiteImpl> getFils() throws RemoteException;
+    public void addFils(SiteItf fils) throws RemoteException;
+    public List<SiteItf> getFils() throws RemoteException;
+    
+    public String SayHello() throws RemoteException;
 }

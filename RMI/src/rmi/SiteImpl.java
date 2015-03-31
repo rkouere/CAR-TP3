@@ -25,7 +25,7 @@ http://www.javacoffeebreak.com/articles/javarmi/javarmi.html
  * @author echallier
  */
 public class SiteImpl extends UnicastRemoteObject implements SiteItf {
-    private List<SiteImpl> fils = new ArrayList<SiteImpl>();
+    private List<SiteItf> fils = new ArrayList<SiteItf>();
     private byte[] data = null;
 
     public SiteImpl() throws RemoteException{
@@ -33,12 +33,13 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
     }
 
     @Override
-    public void addFils(SiteImpl fils)  throws RemoteException{
+    public void addFils(SiteItf fils)  throws RemoteException{
+        System.out.println("Fils ajout");
         this.fils.add(fils);
     }
     
     @Override
-    public List<SiteImpl> getFils()  throws RemoteException{
+    public List<SiteItf> getFils()  throws RemoteException{
         return this.fils;
     }
     
@@ -50,9 +51,14 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
     }
     @Override
     public void diffuserMessage(byte[] data) throws RemoteException {
-        for(SiteImpl site:this.fils){
+        for(SiteItf site:this.fils){
             site.recevoirMessage(data);
         }
+    }
+    
+    @Override
+    public String SayHello() throws RemoteException {
+        return "Hello";
     }
 
 }
