@@ -55,7 +55,7 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
     public void diffuserMessage(byte[] data) throws RemoteException {
         for(SiteItf site:this.fils){
             System.out.println("Sending from node " + this.id + " to node " + site.getId());
-            site.recevoirMessage(data);
+            new TransferData(site, this.data).start();
         }
     }
     
