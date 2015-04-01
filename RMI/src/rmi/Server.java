@@ -18,16 +18,15 @@ import java.rmi.registry.Registry;
 public class Server {
        public static void main(String[] args){
         SiteItf obj1, obj2, obj3, obj4, obj5, obj6;
+        byte[] data = "bonjour".getBytes();
         try {
             /* bin chaque objets au server */
-            obj1 = new SiteImpl();
-            obj2 = new SiteImpl();
-            obj3 = new SiteImpl();
-            obj4 = new SiteImpl();
-            obj5 = new SiteImpl();
-            obj6 = new SiteImpl();
-            
-            
+            obj1 = new SiteImpl(1);
+            obj2 = new SiteImpl(2);
+            obj3 = new SiteImpl(3);
+            obj4 = new SiteImpl(4);
+            obj5 = new SiteImpl(5);
+            obj6 = new SiteImpl(6);
 
             // Assign a security manager, in the event that dynamic
             // classes are loaded
@@ -36,35 +35,35 @@ public class Server {
             LocateRegistry.createRegistry(Globals.PortServer);
 
             Registry registre = LocateRegistry.getRegistry(Globals.PortServer);
-            
-
-            
+           
             /* exporting the object */
             registre.rebind("rmi://localhost:6000/node1", obj1);
             registre.rebind("rmi://localhost:6000/node2", obj2);
-//            registre.rebind("node3", obj3);
-//            registre.rebind("node4", obj4);
-//            registre.rebind("node5", obj5);
-//            registre.rebind("node6", obj6);
+            registre.rebind("rmi://localhost:6000/node3", obj3);
+            registre.rebind("rmi://localhost:6000/node4", obj4);
+            registre.rebind("rmi://localhost:6000/node5", obj5);
+            registre.rebind("rmi://localhost:6000/node6", obj6);
             
             /* we get the reference of the stub */
             obj1 = (SiteItf) registre.lookup("rmi://localhost:6000/node1");
             obj2 = (SiteItf) registre.lookup("rmi://localhost:6000/node2");
-//            obj3 = (SiteImpl) registre.lookup("node3");
-//            obj4 = (SiteImpl) registre.lookup("node4");
-//            obj5 = (SiteImpl) registre.lookup("node5");
-//            obj6 = (SiteImpl) registre.lookup("node6");
+            obj3 = (SiteItf) registre.lookup("rmi://localhost:6000/node3");
+            obj4 = (SiteItf) registre.lookup("rmi://localhost:6000/node4");
+            obj5 = (SiteItf) registre.lookup("rmi://localhost:6000/node5");
+            obj6 = (SiteItf) registre.lookup("rmi://localhost:6000/node6");
+           
 
                        
             /* we add the sons */
-           obj1.addFils(obj2);
-//            obj1.addFils(obj5);
-//
-//            obj2.addFils(obj3);
-//            obj2.addFils(obj4);
-//
-//            obj5.addFils(obj6);
+            obj1.addFils(obj2);
+            obj1.addFils(obj5);
+
+            obj2.addFils(obj3);
+            obj2.addFils(obj4);
+
+            obj5.addFils(obj6);
             
+            obj1.diffuserMessage(data);
 
             
         } catch (Exception ex) {

@@ -21,6 +21,6 @@ public interface SiteItf extends Remote {
     public void recevoirMessage(byte[] data) throws RemoteException;
     public void addFils(SiteItf fils) throws RemoteException;
     public List<SiteItf> getFils() throws RemoteException;
-    
     public String SayHello() throws RemoteException;
+    public int getId() throws RemoteException;
 }
