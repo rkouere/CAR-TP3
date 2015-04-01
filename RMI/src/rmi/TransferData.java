@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Envois un message à un noeud en parallele
  * @author echallier
  */
 public class TransferData extends Thread {

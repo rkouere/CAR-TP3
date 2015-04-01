@@ -25,8 +25,9 @@ http://www.javacoffeebreak.com/articles/javarmi/javarmi.html
  * @author echallier
  */
 public class SiteImpl extends UnicastRemoteObject implements SiteItf {
-    private List<SiteItf> fils = new ArrayList<SiteItf>();
+    private List<SiteItf> connectedNodes = new ArrayList<SiteItf>();
     private byte[] data = null;
+    boolean alreadyVisited = false;
     int id = 0;
 
     public SiteImpl(int id) throws RemoteException{
@@ -34,36 +35,60 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
         this.id = id;
     }
 
+    /**
+    * @inheritDoc
+    *
+    */
     @Override
-    public void addFils(SiteItf fils)  throws RemoteException{
+    public void addNode(SiteItf fils)  throws RemoteException{
         System.out.println("Fils ajout");
-        this.fils.add(fils);
+        this.connectedNodes.add(fils);
     }
-    
+    /**
+    * @inheritDoc
+    *
+    */
     @Override
-    public List<SiteItf> getFils()  throws RemoteException{
-        return this.fils;
+    public List<SiteItf> getNodes()  throws RemoteException{
+        return this.connectedNodes;
     }
     
+    /**
+    * @inheritDoc
+    *
+    */
     @Override
     public void recevoirMessage(byte[] data) throws RemoteException {
-        this.data = data;
-        if(!this.fils.isEmpty())
-            diffuserMessage(this.data);
-    }
-    @Override
-    public void diffuserMessage(byte[] data) throws RemoteException {
-        for(SiteItf site:this.fils){
-            System.out.println("Sending from node " + this.id + " to node " + site.getId());
-            new TransferData(site, this.data).start();
+        /* si on a pas déjà envoyé de message, on s'assure que l'on en renverra pas */
+        if(this.alreadyVisited == false) {
+            synchronized(this) {
+                this.alreadyVisited = true;
+            }
+            System.out.println("I am noeud " + this.id + " et j'ai reçu un message.");
+            this.data = data;
+
+            if(!this.connectedNodes.isEmpty())
+                diffuserMessage(this.data);
         }
     }
     
+    /**
+    * @inheritDoc
+    *
+    */
     @Override
-    public String SayHello() throws RemoteException {
-        return "Hello";
-    }
+    public void diffuserMessage(byte[] data) throws RemoteException {
+        for(SiteItf site:this.connectedNodes){
+            System.out.println("Sending from node " + this.id + " to node " + site.getId());
+            new TransferData(site, this.data).start();
+        }
 
+    }
+    
+    /**
+    * @inheritDoc
+    *
+    */
     @Override
     public int getId() throws RemoteException {
         return this.id;
