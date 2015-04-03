@@ -17,6 +17,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import tests.ExportExpectedResults;
 
 /**
  *
@@ -27,26 +28,44 @@ public class Server {
         byte[] data = "bonjour".getBytes();
         int id = 0;
         boolean verbose = false;
+        boolean test = false;
+        // Sert principalement à imprimer les message en mode verbose
         Globals tools = new Globals();
-
+        // Permet de parser le fichier xml et d'exporter les resultat que l'on doit attendre
+        ExportExpectedResults exportRez = null;
         
-        if(args.length != 2 || args.length != 2) {
-               System.out.println("Il faut donner au moins deux arguments : \n" +
+        String errorMessage = "Il faut donner au moins deux arguments : \n" +
                        "- le noeud à partir duquel on envoit le message\n" +
-                       "- le fichier xml ede paramétrage");
+                       "- le fichier xml ede paramétrage" +
+                       "- (optionnel) -test : pour generer les fichiers de test";
+        
+        if(args.length < 2 || args.length > 3) {
+               System.out.println(errorMessage);
                System.exit(-1);
         }
         
+        if(args.length == 3) {
+            for(String arg: args) {
+                if(arg.contentEquals("-test")){
+                    test = true;
+                }
+            }
+            /// si on a trois arguments et que le troisieme n'est pas test, on arrete tout
+            if(test == false) {
+                System.out.println(errorMessage);
+                System.exit(-1);
+            }
+        }
  
         try {
             /* on demare le registry */
-            LocateRegistry.createRegistry(Globals.PortServer);
-            Registry registre = LocateRegistry.getRegistry(Globals.PortServer);
+            LocateRegistry.createRegistry(tools.PortServer);
+            Registry registre = LocateRegistry.getRegistry(tools.PortServer);
             
             /* reading xml file */
             /* merci http://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/ */
             /* on recupere le fichier de conf */
-            File fXmlFile = new File("src/rmi/" + args[1]);
+            File fXmlFile = new File("src/params/" + args[1]);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             org.w3c.dom.Document doc = dBuilder.parse(fXmlFile);
@@ -54,10 +73,14 @@ public class Server {
             //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
             doc.getDocumentElement().normalize();
  
-            /* on veut gerer tous les nodes */
             NodeList nList = doc.getElementsByTagName("node");
+            if(test) {
+                exportRez = new ExportExpectedResults(nList);
+                exportRez.export();
+            }
             /* on commence par generer tous les objets */
             
+            /* on veut gerer tous les nodes */
             SiteItf[] obj = new SiteItf[nList.getLength() + 1];
 
             for (int temp = 0; temp < nList.getLength(); temp++) {
