@@ -27,9 +27,12 @@ public class Server {
         byte[] data = "bonjour".getBytes();
         int id = 0;
         
-//        if(args.length != 1)
-//               System.out.println("Il faut donner un fichier xml en parametre");
-        
+        if(args.length != 2) {
+               System.out.println("Il faut donner deux arguments : \n" +
+                       "- le noeud à partir duquel on envoit le message\n" +
+                       "- le fichier xml ede paramétrage");
+               System.exit(-1);
+        }
         
  
         try {
@@ -40,7 +43,7 @@ public class Server {
             /* reading xml file */
             /* merci http://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/ */
             /* on recupere le fichier de conf */
-            File fXmlFile = new File("/home/rkouere/fac/M1/S2/car/CAR-TP3/RMI/src/rmi/param1.xml");
+            File fXmlFile = new File("src/rmi/" + args[1]);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             org.w3c.dom.Document doc = dBuilder.parse(fXmlFile);
@@ -109,7 +112,7 @@ public class Server {
            
             System.out.println("Envoit a partir du noeud " + obj[0].getId());
             System.out.println("Ce node a " + obj[0].getNodes().size() + " nodes.");
-           obj[0].diffuserMessage(data);
+           obj[Integer.parseInt(args[0]) - 1].diffuserMessage(data);
         }
         catch (Exception e) {
             e.printStackTrace();

@@ -11,6 +11,7 @@
   <node id="3">
   </node>
   <node id="4">
+      <connectedNode>6</connectedNode>
   </node>
   <node id="5">
       <connectedNode>6</connectedNode>

@@ -64,7 +64,6 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
             synchronized(this) {
                 this.alreadyVisited = true;
             }
-            System.out.println("I am noeud " + this.id + " et j'ai reçu un message.");
             this.data = data;
 
             if(!this.connectedNodes.isEmpty())
