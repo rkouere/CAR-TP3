@@ -65,6 +65,7 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
                 this.alreadyVisited = true;
             }
             this.data = data;
+            System.out.println((char)27 + "[34mNode " + this.id + " has received a message and is sending it to its friends. " + (char)27 + "[30m");
 
             if(!this.connectedNodes.isEmpty())
                 diffuserMessage(this.data);
@@ -78,7 +79,7 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
     @Override
     public void diffuserMessage(byte[] data) throws RemoteException {
         for(SiteItf site:this.connectedNodes){
-            System.out.println("Sending from node " + this.id + " to node " + site.getId());
+            System.out.println((char)27 + "[32mSending from node " + this.id + " to node " + site.getId() + (char)27 + "[30m");
             new TransferData(site, this.data).start();
         }
 
