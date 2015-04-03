@@ -11,4 +11,9 @@ package divers;
  */
 public class Globals {
     public static final int PortServer = 6000;
+    public void printVerbose(String msg, boolean verbose) {
+        if(verbose)
+            System.out.println(msg);
+    }
+
 }

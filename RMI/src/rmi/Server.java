@@ -26,9 +26,12 @@ public class Server {
        public static void main(String[] args){
         byte[] data = "bonjour".getBytes();
         int id = 0;
+        boolean verbose = false;
+        Globals tools = new Globals();
+
         
-        if(args.length != 2) {
-               System.out.println("Il faut donner deux arguments : \n" +
+        if(args.length != 2 || args.length != 2) {
+               System.out.println("Il faut donner au moins deux arguments : \n" +
                        "- le noeud à partir duquel on envoit le message\n" +
                        "- le fichier xml ede paramétrage");
                System.exit(-1);
@@ -63,30 +66,30 @@ public class Server {
 		if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 			Element eElement = (Element) nNode;
                         id = Integer.parseInt(eElement.getAttribute("id"));
-                        System.out.println(id);
+                        tools.printVerbose(Integer.toString(id), verbose);
 			/* on va creer un objet */
                         obj[temp] = new SiteImpl(id);
  
 		}
             }
-            System.out.println("Export des noeuds vers le serveur");
+            tools.printVerbose("Export des noeuds vers le serveur", verbose);
             /* on les exporte dans registre */
             for (int i = 0; i < obj.length-1; i++) {
-                System.out.println("==========" + i);
-                System.out.println("Exporting node" + obj[i].getId());
+                tools.printVerbose("==========" + i, verbose);
+                tools.printVerbose("Exporting node" + obj[i].getId(), verbose);
                 registre.rebind("rmi://localhost:6000/node" + obj[i].getId(), obj[i]);
             }
             
-            System.out.println("\n\n==========");
+            tools.printVerbose("\n\n==========", verbose);
 
             // on recupere les stub
             for (int i = 0; i < obj.length - 1; i++) {
-                System.out.println("==========" + i);
-                System.out.println("getting stub" + obj[i].getId());
+                tools.printVerbose("==========" + i, verbose);
+                tools.printVerbose("getting stub" + obj[i].getId(), verbose);
                 obj[i] = (SiteItf) registre.lookup("rmi://localhost:6000/node" + obj[i].getId());
             }
             
-            System.out.println("\n\n==========");
+            tools.printVerbose("\n\n==========", verbose);
             // on ajoute pour chaque noeud les nodes avec lesquels il peut se connecter
             for (int temp = 0; temp < nList.getLength() ; temp++) {
 		Node nNode = nList.item(temp);
@@ -94,81 +97,31 @@ public class Server {
 		if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 			Element eElement = (Element) nNode;
                         id = Integer.parseInt(eElement.getAttribute("id"));
-                        System.out.println("============");
-                        System.out.println("I am noeud " + id + " and I have to connect with " + eElement.getElementsByTagName("connectedNode").getLength() + " nodes");
+                        tools.printVerbose("============", verbose);
+                        tools.printVerbose("I am noeud " + id + " and I have to connect with " + eElement.getElementsByTagName("connectedNode").getLength() + " nodes", verbose);
 			/* on va creer un objet */
                         
                         for(int i = 0; i < eElement.getElementsByTagName("connectedNode").getLength(); i++) {
                             String nodeToConnect = eElement.getElementsByTagName("connectedNode").item(i).getTextContent().replaceAll("\\s","");
-                            System.out.println("> connecting to node = " + nodeToConnect);
+                            tools.printVerbose("> connecting to node = " + nodeToConnect, verbose);
                             obj[temp].addNode(obj[Integer.parseInt(nodeToConnect) - 1]);
                         }
 
 		}
             }
         
-           System.out.println("\n\n==========");
-           System.out.println("Diffusion du message");
+           tools.printVerbose("\n\n==========", verbose);
+           tools.printVerbose("Diffusion du message", verbose);
            
-            System.out.println("Envoit a partir du noeud " + obj[0].getId());
-            System.out.println("Ce node a " + obj[0].getNodes().size() + " nodes.");
+            tools.printVerbose("Envoit a partir du noeud " + obj[0].getId(), verbose);
+            tools.printVerbose("Ce node a " + obj[0].getNodes().size() + " nodes.", verbose);
            obj[Integer.parseInt(args[0]) - 1].diffuserMessage(data);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-    }  
+    }
+
+
 }   
-        /* FIN reading file */
-        
-        
-//        try {
-//            /* bin chaque objets au server */
-//            obj1 = new SiteImpl(1);
-//            obj2 = new SiteImpl(2);
-//            obj3 = new SiteImpl(3);
-//            obj4 = new SiteImpl(4);
-//            obj5 = new SiteImpl(5);
-//            obj6 = new SiteImpl(6);
-//
-//            // Assign a security manager, in the event that dynamic
-//            // classes are loaded
-//            
-
-//            /* exporting the object */
-//            registre.rebind("rmi://localhost:6000/node1", obj1);
-//            registre.rebind("rmi://localhost:6000/node2", obj2);
-//            registre.rebind("rmi://localhost:6000/node3", obj3);
-//            registre.rebind("rmi://localhost:6000/node4", obj4);
-//            registre.rebind("rmi://localhost:6000/node5", obj5);
-//            registre.rebind("rmi://localhost:6000/node6", obj6);
-//            
-//            /* we get the reference of the stub */
-//            obj1 = (SiteItf) registre.lookup("rmi://localhost:6000/node1");
-//            obj2 = (SiteItf) registre.lookup("rmi://localhost:6000/node2");
-//            obj3 = (SiteItf) registre.lookup("rmi://localhost:6000/node3");
-//            obj4 = (SiteItf) registre.lookup("rmi://localhost:6000/node4");
-//            obj5 = (SiteItf) registre.lookup("rmi://localhost:6000/node5");
-//            obj6 = (SiteItf) registre.lookup("rmi://localhost:6000/node6");
-//           
-//
-//
-//            /* we add the sons */
-//            obj1.addNode(obj2);
-//            obj1.addNode(obj5);
-//
-//            obj2.addNode(obj3);
-//            obj2.addNode(obj4);
-//
-//            obj5.addNode(obj6);
-//            obj4.addNode(obj6);
-//            
-//            obj1.diffuserMessage(data);
-//
-//            
-//        } catch (Exception ex) {
-//            System.out.println("SiteImpl err: " + ex.getMessage());
-//            ex.printStackTrace(); 
-//        }
-//    } 
-
+ 

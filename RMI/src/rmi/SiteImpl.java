@@ -41,7 +41,6 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
     */
     @Override
     public void addNode(SiteItf fils)  throws RemoteException{
-        System.out.println("Fils ajout");
         this.connectedNodes.add(fils);
     }
     /**
