@@ -104,7 +104,7 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
     }
     
     /**
-     * Permet d'éviter au node étant le point de depart d'envoyer de re-envoyer des messages
+     * @inheritDoc
      */
     public void setSenderId()  throws RemoteException{
         this.alreadyVisited = true;

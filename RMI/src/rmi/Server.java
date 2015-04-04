@@ -141,8 +141,10 @@ public class Server {
                         tools.printVerbose("I am noeud " + id + " and I have to connect with " + eElement.getElementsByTagName("connectedNode").getLength() + " nodes", verbose);
                         
                         for(int i = 0; i < eElement.getElementsByTagName("connectedNode").getLength(); i++) {
-                            Globals.nbrNoeudAEnvoyer ++;
-
+                            // si on fait des tests, on veut s'arreter au moment ou tous les messages ont été envoyé
+                            if(Globals.test)
+                                Globals.nbrNoeudAEnvoyer ++;
+                            
                             String nodeToConnect = eElement.getElementsByTagName("connectedNode").item(i).getTextContent().replaceAll("\\s","");
                             tools.printVerbose("> connecting to node = " + nodeToConnect, verbose);
                             obj[temp].addNode(obj[Integer.parseInt(nodeToConnect) - 1]);
