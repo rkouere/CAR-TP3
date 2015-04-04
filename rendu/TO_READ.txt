@@ -1,0 +1,58 @@
+Creation d'une passerelle REST
+Congcong Xu - Nicolas Echallier
+04/04/14
+
+====================================================
+Introduction :
+Le but de ce TP est de crééer une application répartie utilisant la technologie RMI.
+On considère une application répartie qui permet de transférer en RMI des données à un ensemble d’objets organisés selon une topologie en graphe orienté. Chaque nœudde l’arbre s’exécute dans une machine virtuelle différente et propage les données aux noeuds qui lui sont assigné.
+
+Toutes les implémentation demandé ont été effectueé :
+- Écriture l’interface RMI SiteItf et la classe SiteImpl
+- Les diffusions peuvent être initiées à partir de n’importe quel objet de l’arbre
+- Les diffusions s’effectuent concurremment dans chacune des branches de l’arbre
+- Gestion de la topologie sous forme d'arbre
+- Utilisation d'un fichier XML pour la configuration.
+
+
+====================================================
+Structure du fichier de config :
+<param>
+	[optionel]
+	<testResults>
+	        <nodeOrigin>[node de depart]</nodeOrigin>
+        	<sent>[nombre de message qui devrait petre envoyé]</sent>
+        	<received>[nombre de message qui devrait être reçu]</received>
+	</testResults>
+	[fin optionel]
+	<node id=[num node]>
+		<connectedNode>[node que l'on veut connecter]</connectedNode>
+		<connectedNode>[node que l'on veut connecter]</connectedNode>
+	</node>
+</param>
+
+====================================================
+Utilisation
+L'installation que j'ai sur ma machine étant un peut bizard, je ne pet ancer le .jar qu'avec la commande suivant :
+/home/rkouere/jdk1.7.0_75/bin/java -jar /home/rkouere/fac/S2/car/CAR-TP3/RMI/dist/RMI.jar [fichier.xml neodu de départ]
+Les envoits de chaque noeud s'impriment en vert et les receptions en bleu.
+
+
+====================================================
+Test :
+Pour lancer les tests : executer le script tests.sh. Ce script va tester l'application avec tous les fichiers .xml présents dans le repertoires courant. 
+
+Dans ce fichier de config, il faut ajouter un tag "testResults" avec trois paramètres :
+<nodeOrigin> : le noeud à partir duquel on envoit le message
+<sent>6 : le nombre de message que l'on doit envoyer
+<received>5 : le nombre de message que chaque noeud doit renvoyer après avoir reçu un message 
+Les tests ne fonctionnenent que si l'on a envoyé un message à tous les noeuds.
+
+
+====================================================
+Gestion d'erreurs
+Nous avons géré les erreurs avec les exceptions par défault.
+
+====================================================
+Code Samples
+Il est demandé dans le rendu de présenter 5 codes samples interessant. Ce rendu de TP n'a pas implémenté de code avec soit une méthode contenant un algorithme intéressant, soit une liste de classes impliquées dans un design pattern soit une jolie optimisation. Je ne savais donc pas quoi mettre dans cette section.
