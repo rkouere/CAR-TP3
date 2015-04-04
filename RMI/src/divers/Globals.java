@@ -6,13 +6,20 @@
 package divers;
 
 /**
- * Stockaqe du numero de port
- * Fonction permettant d'imprimer des message en mode verbose
+ * Class contenant des variables globales ainsi que une méthode pour gérer l'affichage en mode verobse.
+ * 
  * @author rkouere
  */
 public class Globals {
+    /**
+     * Le port sur lequel le serveur rmi se connect
+     */
     public static final int PortServer = 6000;
-    public static final String pathToParams = new String("src/params/");
+    
+    /**
+     * Le chemin vers les fichiers de configuration
+     */
+    public static final String pathToParams = "";
     
     /**
      * Imprime les message passé en paramètre  si verbose est vrai 

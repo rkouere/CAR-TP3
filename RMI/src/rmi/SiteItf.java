@@ -6,14 +6,13 @@
 
 package rmi;
 
-import Q2.*;
 import rmi.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
 /**
- *
+ * Interface regroupant les méthodes utilisé par chaque noeud
  * @author echallier
  */
 public interface SiteItf extends Remote {

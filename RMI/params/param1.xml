@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <param>
     <testResults>
-        <nodeOrigin>1</nodeOrigin>
+        <nodeOrigin>2</nodeOrigin>
         <sent>6</sent>
         <received>5</received>
     </testResults>

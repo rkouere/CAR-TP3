@@ -20,7 +20,7 @@ import org.w3c.dom.NodeList;
 import tests.ExportExpectedResults;
 
 /**
- *
+ * Main. Met en route le serveur, lit le fichier de param, créé/exporte les noeuds, envoit le message.
  * @author rkouere
  */
 public class Server {
@@ -29,26 +29,34 @@ public class Server {
         int id = 0;
         boolean verbose = false;
         boolean test = false;
+        String fichierParam = null;
+        String noeudEnvoisMessage = null;
+        
         // Sert principalement à imprimer les message en mode verbose
         Globals tools = new Globals();
         // Permet de parser le fichier xml et d'exporter les resultat que l'on doit attendre
         ExportExpectedResults exportRez = null;
         
-        String errorMessage = "Il faut donner au moins deux arguments : \n" +
-                       "- le noeud à partir duquel on envoit le message\n" +
-                       "- le fichier xml ede paramétrage" +
-                       "- (optionnel) -test : pour generer les fichiers de test";
-        
+        String errorMessage =   "Il faut donner au moins deux arguments : \n" +
+                                "- le fichier xml de paramétrage\n" + 
+                                "- le noeud à partir duquel on envoit le message\n" +
+                                "- (optionnel) -test : pour generer les fichiers de test";
+
+        // on verifie que l'on a le bon nombre d'arguments
         if(args.length < 2 || args.length > 3) {
                System.out.println(errorMessage);
                System.exit(-1);
         }
         
+        else {
+            fichierParam = args[0];
+            noeudEnvoisMessage = args[1];            
+        }
+        
+        // si on veut ausis tester le prog, on initialise le boolean qui va bien
         if(args.length == 3) {
-            for(String arg: args) {
-                if(arg.contentEquals("-test")){
-                    test = true;
-                }
+            if(args[2].contentEquals("-test")) {
+                test = true;
             }
             /// si on a trois arguments et que le troisieme n'est pas test, on arrete tout
             if(test == false) {
@@ -57,6 +65,8 @@ public class Server {
             }
         }
  
+
+        
         try {
             /* on demare le registry */
             LocateRegistry.createRegistry(tools.PortServer);
@@ -65,24 +75,28 @@ public class Server {
             /* reading xml file */
             /* merci http://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/ */
             /* on recupere le fichier de conf */
-            File fXmlFile = new File("src/params/" + args[1]);
+            File fXmlFile = new File(Globals.pathToParams + fichierParam);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             org.w3c.dom.Document doc = dBuilder.parse(fXmlFile);
             //optional, but recommended
             //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
             doc.getDocumentElement().normalize();
- 
-            NodeList nList = doc.getElementsByTagName("node");
-            if(test) {
-                exportRez = new ExportExpectedResults(nList);
-                exportRez.export();
-            }
-            /* on commence par generer tous les objets */
             
-            /* on veut gerer tous les nodes */
+            /*
+            Si on veut un test, on exporte le fichier correspondant
+            */
+            if(test) {
+                exportRez = new ExportExpectedResults(doc);
+                exportRez.export();
+                // le noeud à utiliser pour envoyer le message n'est plus celui passé en param (ugly, I know)
+                noeudEnvoisMessage = exportRez.getNoeudEnvoisMessage();
+            }
+            
+            /* on commence par generer tous les objets */
+            NodeList nList = doc.getElementsByTagName("node");
             SiteItf[] obj = new SiteItf[nList.getLength() + 1];
-
+            
             for (int temp = 0; temp < nList.getLength(); temp++) {
 		Node nNode = nList.item(temp);
  
@@ -113,7 +127,7 @@ public class Server {
             }
             
             tools.printVerbose("\n\n==========", verbose);
-            // on ajoute pour chaque noeud les nodes avec lesquels il peut se connecter
+            // on connecte le node aux autre node avec lesquels il doit communiquer
             for (int temp = 0; temp < nList.getLength() ; temp++) {
 		Node nNode = nList.item(temp);
  
@@ -122,7 +136,6 @@ public class Server {
                         id = Integer.parseInt(eElement.getAttribute("id"));
                         tools.printVerbose("============", verbose);
                         tools.printVerbose("I am noeud " + id + " and I have to connect with " + eElement.getElementsByTagName("connectedNode").getLength() + " nodes", verbose);
-			/* on va creer un objet */
                         
                         for(int i = 0; i < eElement.getElementsByTagName("connectedNode").getLength(); i++) {
                             String nodeToConnect = eElement.getElementsByTagName("connectedNode").item(i).getTextContent().replaceAll("\\s","");
@@ -136,9 +149,9 @@ public class Server {
            tools.printVerbose("\n\n==========", verbose);
            tools.printVerbose("Diffusion du message", verbose);
            
-            tools.printVerbose("Envoit a partir du noeud " + obj[0].getId(), verbose);
-            tools.printVerbose("Ce node a " + obj[0].getNodes().size() + " nodes.", verbose);
-           obj[Integer.parseInt(args[0]) - 1].diffuserMessage(data);
+           tools.printVerbose("Envoit a partir du noeud " + obj[0].getId(), verbose);
+           tools.printVerbose("Ce node a " + obj[0].getNodes().size() + " nodes.", verbose);
+           obj[Integer.parseInt(noeudEnvoisMessage) - 1].diffuserMessage(data);
         }
         catch (Exception e) {
             e.printStackTrace();

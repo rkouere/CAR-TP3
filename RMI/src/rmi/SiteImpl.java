@@ -21,7 +21,7 @@ http://www.javacoffeebreak.com/articles/javarmi/javarmi.html
 */
 
 /**
- *
+ * Implémentation de l'interface SiteItf
  * @author echallier
  */
 public class SiteImpl extends UnicastRemoteObject implements SiteItf {
