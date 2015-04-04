@@ -17,6 +17,19 @@ public class Globals {
     public static final int PortServer = 6000;
     
     /**
+     * Le nombre de noeud qui doivent envoyer des messages
+     */
+    public static int nbrNoeudAEnvoyer = 0;
+    
+    /**
+     * Le nombre de noeud à envoyer
+     */
+    public static int nbrNoeudDejaEnvoye = 0;
+    
+    public static boolean test = false;
+
+    
+    /**
      * Le chemin vers les fichiers de configuration
      */
     public static final String pathToParams = "";

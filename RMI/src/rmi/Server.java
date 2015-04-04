@@ -28,9 +28,11 @@ public class Server {
         byte[] data = "bonjour".getBytes();
         int id = 0;
         boolean verbose = false;
-        boolean test = false;
         String fichierParam = null;
         String noeudEnvoisMessage = null;
+        
+        // le nombre de noeud qui doivent recevoir un message.
+        int nbrDeNoeud = 0;
         
         // Sert principalement à imprimer les message en mode verbose
         Globals tools = new Globals();
@@ -56,10 +58,10 @@ public class Server {
         // si on veut ausis tester le prog, on initialise le boolean qui va bien
         if(args.length == 3) {
             if(args[2].contentEquals("-test")) {
-                test = true;
+                Globals.test = true;
             }
             /// si on a trois arguments et que le troisieme n'est pas test, on arrete tout
-            if(test == false) {
+            if(Globals.test == false) {
                 System.out.println(errorMessage);
                 System.exit(-1);
             }
@@ -86,7 +88,7 @@ public class Server {
             /*
             Si on veut un test, on exporte le fichier correspondant
             */
-            if(test) {
+            if(Globals.test) {
                 exportRez = new ExportExpectedResults(doc);
                 exportRez.export();
                 // le noeud à utiliser pour envoyer le message n'est plus celui passé en param (ugly, I know)
@@ -95,7 +97,8 @@ public class Server {
             
             /* on commence par generer tous les objets */
             NodeList nList = doc.getElementsByTagName("node");
-            SiteItf[] obj = new SiteItf[nList.getLength() + 1];
+            nbrDeNoeud = nList.getLength();
+            SiteItf[] obj = new SiteItf[nbrDeNoeud];
             
             for (int temp = 0; temp < nList.getLength(); temp++) {
 		Node nNode = nList.item(temp);
@@ -138,6 +141,8 @@ public class Server {
                         tools.printVerbose("I am noeud " + id + " and I have to connect with " + eElement.getElementsByTagName("connectedNode").getLength() + " nodes", verbose);
                         
                         for(int i = 0; i < eElement.getElementsByTagName("connectedNode").getLength(); i++) {
+                            Globals.nbrNoeudAEnvoyer ++;
+
                             String nodeToConnect = eElement.getElementsByTagName("connectedNode").item(i).getTextContent().replaceAll("\\s","");
                             tools.printVerbose("> connecting to node = " + nodeToConnect, verbose);
                             obj[temp].addNode(obj[Integer.parseInt(nodeToConnect) - 1]);
@@ -151,7 +156,9 @@ public class Server {
            
            tools.printVerbose("Envoit a partir du noeud " + obj[0].getId(), verbose);
            tools.printVerbose("Ce node a " + obj[0].getNodes().size() + " nodes.", verbose);
+           obj[Integer.parseInt(noeudEnvoisMessage) - 1].setSenderId();
            obj[Integer.parseInt(noeudEnvoisMessage) - 1].diffuserMessage(data);
+           
         }
         catch (Exception e) {
             e.printStackTrace();

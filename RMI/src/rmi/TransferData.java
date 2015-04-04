@@ -6,6 +6,7 @@
 
 package rmi;
 
+import divers.Globals;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +25,7 @@ public class TransferData extends Thread {
     public void run() {
         try {
             this.target.recevoirMessage(this.data);
+
         } catch (RemoteException ex) {
             Logger.getLogger(TransferData.class.getName()).log(Level.SEVERE, null, ex);
         }

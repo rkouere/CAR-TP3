@@ -51,5 +51,10 @@ public interface SiteItf extends Remote {
      * @throws RemoteException 
      */
     public int getId() throws RemoteException;
+    
+    /**
+     * Permet d'éviter au node étant le point de depart d'envoyer de re-envoyer des messages
+     */
+    public void setSenderId()  throws RemoteException;
 
 }

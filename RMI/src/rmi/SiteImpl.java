@@ -59,15 +59,17 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
     @Override
     public void recevoirMessage(byte[] data) throws RemoteException {
         /* si on a pas déjà envoyé de message, on s'assure que l'on en renverra pas */
-        if(this.alreadyVisited == false) {
-            synchronized(this) {
-                this.alreadyVisited = true;
-            }
-            this.data = data;
-            System.out.println((char)27 + "[34mNode " + this.id + " has received a message and is sending it to its friends. " + (char)27 + "[30m");
+        synchronized(this) {
+            if(this.alreadyVisited == false) {
+                    this.alreadyVisited = true;
+                this.data = data;
+                System.out.println((char)27 + "[34mNode " + this.id + " has received a message and is sending it to its friends. " + (char)27 + "[30m");
 
-            if(!this.connectedNodes.isEmpty())
-                diffuserMessage(this.data);
+                // si il y a des nodes a qui envoyer des messages
+                if(!this.connectedNodes.isEmpty())
+                    diffuserMessage(this.data);
+
+            }
         }
     }
     
@@ -80,8 +82,16 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
         for(SiteItf site:this.connectedNodes){
             System.out.println((char)27 + "[32mSending from node " + this.id + " to node " + site.getId() + (char)27 + "[30m");
             new TransferData(site, this.data).start();
-        }
+            
+            if(Globals.test)
+                Globals.nbrNoeudDejaEnvoye++;
 
+        }
+ 
+        // si il n'y a plus de nodes à envoyer
+        if(Globals.test)
+            if(Globals.nbrNoeudAEnvoyer == Globals.nbrNoeudDejaEnvoye)
+                System.exit(0);
     }
     
     /**
@@ -91,6 +101,13 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf {
     @Override
     public int getId() throws RemoteException {
         return this.id;
+    }
+    
+    /**
+     * Permet d'éviter au node étant le point de depart d'envoyer de re-envoyer des messages
+     */
+    public void setSenderId()  throws RemoteException{
+        this.alreadyVisited = true;
     }
 
 

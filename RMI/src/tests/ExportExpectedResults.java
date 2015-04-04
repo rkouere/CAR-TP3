@@ -59,7 +59,7 @@ public class ExportExpectedResults {
         // on les ecrit dans un fichier
         out = new BufferedWriter(new FileWriter(Globals.pathToParams + "expectedRes.txt"));
         out.write(this.sent + "\n");
-        out.write(this.received);
+        out.write(this.received + "\n");
         out.close();
         
     }

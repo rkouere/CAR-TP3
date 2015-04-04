@@ -2,8 +2,8 @@
 <param>
    <testResults>
         <nodeOrigin>1</nodeOrigin>
-        <sent>18</sent>
-        <received>9</received>
+        <sent>15</sent>
+        <received>8</received>
     </testResults>  
     <node id="1">
       <connectedNode>2</connectedNode>
